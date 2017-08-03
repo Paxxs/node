@@ -64,3 +64,15 @@ https://stackoverflow.com/questions/42822875/springboot-1-5-x-security-oauth2
 ## 关于 Spring Boot 权限管理的一些文档
 
 https://docs.spring.io/spring-security/site/docs/current/reference/html/el-access.html
+
+## 多个 ResourceService 共享一个 AuthorizationService，在多个服务的Controller 间相互调用（fegin）进行授权验证，Scope 丢失
+
+https://github.com/spring-projects/spring-boot/issues/5096
+
+https://github.com/silent-box/spring-oauth2-test/blob/master/account-service/src/main/java/com/test/account/CustomUserInfoTokenServices.java
+
+## 注入其他项目中的feignClient出现无法被scan到（注入失败）
+
+https://stackoverflow.com/questions/30241198/error-injecting-feignclient-from-another-project
+
+https://github.com/spring-cloud-samples/feign-eureka/issues/2
