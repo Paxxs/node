@@ -59,7 +59,7 @@ iptables -A INPUT -p tcp --dport 21 -j DROP
 ```
 
 ### 保存防火墙规则
- 
+
 ```shell
 service iptables save
 ```
@@ -85,7 +85,7 @@ service iptables restart #重启
 
 ### 查看日志
 
-```shell 
+```shell
 tail  -n 20000 /var/log/messages |grep ER
 ```
 
@@ -96,7 +96,7 @@ tail  -n 20000 /var/log/messages |grep ER
 `/var/log/maillog`     与邮件相关的日志信息
 `/var/log/cron`     与定时任务相关的日志信息
 `/var/log/spooler`     与UUCP和news设备相关的日志信息
-`/var/log/boot.log`     守护进程启动和停止相关的日志消息 
+`/var/log/boot.log`     守护进程启动和停止相关的日志消息
 
 ## 任务计划
 
@@ -106,16 +106,17 @@ crontab -l  #列出任务计划列表
 
 ## FTP
 
-###连接 
+### 连接
 
 ```shell
-lftp user:password@127.0.0.1 
+lftp user:password@127.0.0.1
 ```
 
 ### 上传
 
 ```shell
 put /root/a.txt
+```
 
 ## 拷贝
 
@@ -144,14 +145,14 @@ ntp常用服务器：
 中国国家授时中心：210.72.145.44
 NTP服务器(上海) ：ntp.api.bz
 
-美国：time.nist.gov 
-复旦：ntp.fudan.edu.cn 
-微软公司授时主机(美国) ：time.windows.com 
+美国：time.nist.gov
+复旦：ntp.fudan.edu.cn
+微软公司授时主机(美国) ：time.windows.com
 台警大授时中心(台湾)：asia.pool.ntp.org
 
 ## CPU
 
-总核数 = 物理CPU个数 X 每颗物理CPU的核数 
+总核数 = 物理CPU个数 X 每颗物理CPU的核数
 
 总逻辑CPU数 = 物理CPU个数 X 每颗物理CPU的核数 X 超线程数
 
@@ -172,6 +173,3 @@ cat /proc/cpuinfo| grep "cpu cores"| uniq
 ```shell
 cat /proc/cpuinfo| grep "processor"| wc -l
 ```
-
-
-

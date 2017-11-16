@@ -1,99 +1,113 @@
-一：基介绍
+## 一：基介绍
 
-  官网地址www.nginx.org，nginx是由1994年毕业于俄罗斯国立莫斯科鲍曼科技大学的同学为俄罗斯rambler.ru公司开发的，开发工作最早从2002年开始，第一次公开发布时间是2004年10月4日，版本号是0.1.0
+官网地址www.nginx.org，nginx是由1994年毕业于俄罗斯国立莫斯科鲍曼科技大学的同学为俄罗斯rambler.ru公司开发的，开发工作最早从2002年开始，第一次公开发布时间是2004年10月4日，版本号是0.1.0
 
-　Nginx是单进程单线程模型，即启动的工作进程只有一个进程响应客户端请求，不像apache可以在一个进程内启动多个线程响应可请求，因此在内存占用上比apache小的很多。Nginx维持一万个非活动会话只要2.5M内存。Nginx和Mysql是CPU密集型的，就是对CPU的占用比较大，默认session在本地文件保存，支持将session保存在memcache，但是memcache默认支持最大1M的课hash对象。
+Nginx是单进程单线程模型，即启动的工作进程只有一个进程响应客户端请求，不像apache可以在一个进程内启动多个线程响应可请求，因此在内存占用上比apache小的很多。Nginx维持一万个非活动会话只要2.5M内存。Nginx和Mysql是CPU密集型的，就是对CPU的占用比较大，默认session在本地文件保存，支持将session保存在memcache，但是memcache默认支持最大1M的课hash对象。
 
-  nginx的版本分为开发版、稳定版和过期版，nginx以功能丰富著称，它即可以作为http服务器，也可以作为反向代理服务器或者邮件服务器，能够快速的响应静态网页的请求，支持FastCGI/SSL/Virtual Host/URL Rwrite/Gzip/HTTP Basic Auth等功能，并且支持第三方的功能扩展。
+nginx的版本分为开发版、稳定版和过期版，nginx以功能丰富著称，它即可以作为http服务器，也可以作为反向代理服务器或者邮件服务器，能够快速的响应静态网页的请求，支持FastCGI/SSL/Virtual Host/URL Rwrite/Gzip/HTTP Basic Auth等功能，并且支持第三方的功能扩展。
 
-  nginx安装可以使用yum或源码安装，推荐使用源码，一是yum的版本比较旧，二是使用源码可以自定义功能，方便业务的上的使用，源码安装需要提前准备标准的编译器，GCC的全称是（GNU Compiler collection），其有GNU开发，并以GPL即LGPL许可，是自由的类UNIX即苹果电脑Mac OS X操作系统的标准编译器，因为GCC原本只能处理C语言，所以原名为GNU C语言编译器，后来得到快速发展，可以处理C++,Fortran，pascal，objective-C，java以及Ada等其他语言，此外还需要Automake工具，以完成自动创建Makefile的工作，Nginx的一些模块需要依赖第三方库，比如pcre（支持rewrite），zlib（支持gzip模块）和openssl（支持ssl模块）
+nginx安装可以使用yum或源码安装，推荐使用源码，一是yum的版本比较旧，二是使用源码可以自定义功能，方便业务的上的使用，源码安装需要提前准备标准的编译器，GCC的全称是（GNU Compiler collection），其有GNU开发，并以GPL即LGPL许可，是自由的类UNIX即苹果电脑Mac OS X操作系统的标准编译器，因为GCC原本只能处理C语言，所以原名为GNU C语言编译器，后来得到快速发展，可以处理C++,Fortran，pascal，objective-C，java以及Ada等其他语言，此外还需要Automake工具，以完成自动创建Makefile的工作，Nginx的一些模块需要依赖第三方库，比如pcre（支持rewrite），zlib（支持gzip模块）和openssl（支持ssl模块）
 
-二：安装
+## 二：安装
 
-1、环境准备：先安装准备环境
+### 1、环境准备：先安装准备环境
 
-yum install gcc gcc-c++ automake pcre pcre-devel zlip zlib-devel openssl openssl-devel
+```shell
+$ sudo yum install gcc gcc-c++ automake pcre pcre-devel zlip zlib-devel openssl openssl-devel
+```
 
-复制代码
-　　gcc为GNU Compiler Collection的缩写，可以编译C和C++源代码等，它是GNU开发的C和C++以及其他很多种语言 的编译器（最早的时候只能编译C，后来很快进化成一个编译多种语言的集合，如Fortran、Pascal、Objective-C、Java、Ada、 Go等。）
-　　gcc 在编译C++源代码的阶段，只能编译 C++ 源文件，而不能自动和 C++ 程序使用的库链接（编译过程分为编译、链接两个阶段，注意不要和可执行文件这个概念搞混，相对可执行文件来说有三个重要的概念：编译（compile）、链接（link）、加载（load）。源程序文件被编译成目标文件，多个目标文件连同库被链接成一个最终的可执行文件，可执行文件被加载到内存中运行）。因此，通常使用 g++ 命令来完成 C++ 程序的编译和连接，该程序会自动调用 gcc 实现编译。
-　　gcc-c++也能编译C源代码，只不过把会把它当成C++源代码，后缀为.c的，gcc把它当作是C程序，而g++当作是c++程序；后缀为.cpp的，两者都会认为是c++程序，注意，虽然c++是c的超集，但是两者对语法的要求是有区别的。
-　　automake是一个从Makefile.am文件自动生成Makefile.in的工具。为了生成Makefile.in，automake还需用到perl，由于automake创建的发布完全遵循GNU标准，所以在创建中不需要perl。libtool是一款方便生成各种程序库的工具。
-　　pcre pcre-devel：在Nginx编译需要 PCRE(Perl Compatible Regular Expression)，因为Nginx 的Rewrite模块和HTTP 核心模块会使用到PCRE正则表达式语法。
-　　zlip zlib-devel：nginx启用压缩功能的时候，需要此模块的支持。
-　　openssl openssl-devel：开启SSL的时候需要此模块的支持。
-复制代码
- 2、下载nginx 安装包：  官网地址：http://nginx.org/
+gcc为GNU Compiler Collection的缩写，可以编译C和C++源代码等，它是GNU开发的C和C++以及其他很多种语言 的编译器（最早的时候只能编译C，后来很快进化成一个编译多种语言的集合，如Fortran、Pascal、Objective-C、Java、Ada、 Go等。）
+
+gcc 在编译C++源代码的阶段，只能编译 C++ 源文件，而不能自动和 C++ 程序使用的库链接（编译过程分为编译、链接两个阶段，注意不要和可执行文件这个概念搞混，相对可执行文件来说有三个重要的概念：编译（compile）、链接（link）、加载（load）。源程序文件被编译成目标文件，多个目标文件连同库被链接成一个最终的可执行文件，可执行文件被加载到内存中运行）。因此，通常使用 g++ 命令来完成 C++ 程序的编译和连接，该程序会自动调用 gcc 实现编译。
+
+gcc-c++也能编译C源代码，只不过把会把它当成C++源代码，后缀为.c的，gcc把它当作是C程序，而g++当作是c++程序；后缀为.cpp的，两者都会认为是c++程序，注意，虽然c++是c的超集，但是两者对语法的要求是有区别的。
+
+automake是一个从Makefile.am文件自动生成Makefile.in的工具。为了生成Makefile.in，automake还需用到perl，由于automake创建的发布完全遵循GNU标准，所以在创建中不需要perl。libtool是一款方便生成各种程序库的工具。
+
+pcre pcre-devel：在Nginx编译需要 PCRE(Perl Compatible Regular Expression)，因为Nginx 的Rewrite模块和HTTP 核心模块会使用到PCRE正则表达式语法。
+
+* zlip zlib-devel：nginx启用压缩功能的时候，需要此模块的支持。
+* openssl openssl-devel：开启SSL的时候需要此模块的支持。
+
+### 2、下载nginx 安装包：  官网地址：http://nginx.org/
 
 截止得到当前，最新的版本为1.8.1，在linux使用wget下载:
 
-复制代码
-[root@Server1 ~]# wget http://nginx.org/download/nginx-1.8.1.tar.gz
---2016-04-23 10:22:55--  http://nginx.org/download/nginx-1.8.1.tar.gz
-Resolving nginx.org (nginx.org)... 206.251.255.63, 95.211.80.227, 2001:1af8:4060:a004:21::e3, ...
-Connecting to nginx.org (nginx.org)|206.251.255.63|:80... connected.
-HTTP request sent, awaiting response... 200 OK
-Length: 833473 (814K) [application/octet-stream]
-Saving to: ‘nginx-1.8.1.tar.gz.1’
+```shell
+$ wget http://nginx.org/download/nginx-1.8.1.tar.gz
+```
 
-100%[==============================================================================================================>] 833,473      251KB/s   in 3.2s   
+### 3、解压安装包:
 
-2016-04-23 10:23:00 (251 KB/s) - ‘nginx-1.8.1.tar.gz.1’ saved [833473/833473]
-复制代码
-3、解压安装包:
+```shell
+tar  xvf nginx-1.8.1.tar.gz
+cd nginx-1.8.1
+```
 
-[root@Server1 ~]# tar  xvf nginx-1.8.1.tar.gz
-[root@Server1 ~]# cd nginx-1.8.1
-[root@Server1 nginx-1.8.1]$ ls
-auto  CHANGES  CHANGES.ru  conf  configure  contrib  html  LICENSE  man  README  src
-4、编译nginx：make
+### 4、编译nginx：make
 
 编译是为了检查系统环境是否符合编译安装的要求，比如是否有gcc编译工具，是否支持编译参数当中的模块，并根据开启的参数等生成Makefile文件为下一步做准备：
 
-复制代码
-[root@Server1 nginx-1.8.1]# ./configure  --prefix=/usr/local/nginx  --sbin-path=/usr/local/nginx/sbin/nginx --conf-path=/usr/local/nginx/conf/nginx.conf --error-log-path=/var/log/nginx/error.log  --http-log-path=/var/log/nginx/access.log  --pid-path=/var/run/nginx/nginx.pid --lock-path=/var/lock/nginx.lock  --user=nginx --group=nginx --with-http_ssl_module --with-http_stub_status_module --with-http_gzip_static_module --http-client-body-temp-path=/var/tmp/nginx/client/ --http-proxy-temp-path=/var/tmp/nginx/proxy/ --http-fastcgi-temp-path=/var/tmp/nginx/fcgi/ --http-uwsgi-temp-path=/var/tmp/nginx/uwsgi --http-scgi-temp-path=/var/tmp/nginx/scgi --with-pcre
-复制代码
-结果如下:
+```shell
+$ ./configure --prefix=/usr/local/nginx \
+--sbin-path=/usr/local/nginx/sbin/nginx \
+--conf-path=/usr/local/nginx/conf/nginx.conf \
+--error-log-path=/var/log/nginx/error.log  \
+--http-log-path=/var/log/nginx/access.log  \
+--pid-path=/var/run/nginx/nginx.pid --lock-path=/var/lock/nginx.lock  \
+--user=nginx --group=nginx --with-http_ssl_module \
+--with-http_stub_status_module --with-http_gzip_static_module \
+--http-client-body-temp-path=/var/tmp/nginx/client/ \
+--http-proxy-temp-path=/var/tmp/nginx/proxy/ \
+--http-fastcgi-temp-path=/var/tmp/nginx/fcgi/ \
+--http-uwsgi-temp-path=/var/tmp/nginx/uwsgi \
+--http-scgi-temp-path=/var/tmp/nginx/scgi --with-pcre
+ ```
 
+### 5、生成脚本及配置文件：make
 
-
-5、生成脚本及配置文件：make
+```shell
+$ make
+```
 
 编译步骤，根据Makefile文件生成相应的模块
 
+### 6、安装：make install
 
-
-6、安装：make install
+```shell
+$ sudo make install
+```
 
 创建目录，并将生成的模块和文件复制到相应的目录：
 
 备注：nginx完成安装以后，有四个主要的目录：
 
-复制代码
 conf：保存nginx所有的配置文件，其中nginx.conf是nginx服务器的最核心最主要的配置文件，其他的.conf则是用来配置nginx相关的功能的，例如fastcgi功能使用的是fastcgi.conf和fastcgi_params两个文件，配置文件一般都有个样板配置文件，是文件名.default结尾，使用的使用将其复制为并将default去掉即可。
 html目录中保存了nginx服务器的web文件，但是可以更改为其他目录保存web文件,另外还有一个50x的web文件是默认的错误页面提示页面。
 logs：用来保存nginx服务器的访问日志错误日志等日志，logs目录可以放在其他路径，比如/var/logs/nginx里面。
 sbin：保存nginx二进制启动脚本，可以接受不同的参数以实现不同的功能。
-复制代码
 
-
-7、启动：
+### 7、启动：
 
 将监听端口改为8090，避免80端口冲突：
 
 listen       8090;
-8、通过命令启动和关闭nginx：
 
-复制代码
-[root@Server1 sbin]# /usr/local/nginx/sbin/nginx/nginx
+### 8、通过命令启动和关闭nginx：
+
+```shell
+$ sudo /usr/local/nginx/sbin/nginx/nginx
+
 nginx: [emerg] getpwnam("nginx") failed  #没有nginx用户
 
-[root@Server1 sbin]# /usr/local/nginx/sbin/nginx/nginx
+$ sudo /usr/local/nginx/sbin/nginx/nginx
+
 nginx: [emerg] mkdir() "/var/tmp/nginx/client/" failed (2: No such file or directory)  #目录不存在
 
-[root@Server1 sbin]# /usr/local/nginx/sbin/nginx/nginx  #直到没有报错，才算启动完成
-复制代码
-9、重读配置文件和关闭服务：
+$ sudo /usr/local/nginx/sbin/nginx/nginx  #直到没有报错，才算启动完成
+```
+
+### 9、重读配置文件和关闭服务：
 
 [root@Server1 local]# /usr/local/nginx/sbin/nginx/nginx  #启动 服务
 [root@Server1 local]# /usr/local/nginx/sbin/nginx/nginx   -s  reload  #不停止服务重读配置文件
