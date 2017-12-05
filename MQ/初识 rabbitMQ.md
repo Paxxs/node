@@ -14,3 +14,6 @@ http://blog.csdn.net/zyz511919766/article/details/42292655
 
 RabbitMQ 博客园
 http://www.cnblogs.com/LipeiNet/category/896408.html
+
+RabbitMQ简介
+https://www.cnblogs.com/stormli/p/rabbitmq.html
