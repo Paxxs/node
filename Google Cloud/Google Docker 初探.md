@@ -6,7 +6,7 @@
 
 https://kubernetes.io/docs/tasks/tools/install-kubectl/#install-with-homebrew-on-macos
 
-2.gcloud command line
+2.gcloud command line(Google Cloud SDK)
 
 https://cloud.google.com/sdk/docs/quickstart-mac-os-x?hl=zh-CN
 
